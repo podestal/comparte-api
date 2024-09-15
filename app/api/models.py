@@ -17,7 +17,7 @@ class AccountOwner(models.Model):
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return self.user.username
+        return f'{self.user.first_name} {self.user.last_name}'
 
 class StreamingServiceAccount(models.Model):
 

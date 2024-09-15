@@ -7,7 +7,6 @@ from . import serializers
 
 class AccountOwnerViewSet(ModelViewSet):
 
-    queryset = models.AccountOwner.objects.all()
     serializer_class = serializers.AccountOwnerSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -26,6 +25,12 @@ class ServiceViewSet(ModelViewSet):
 
     queryset = models.Service.objects.all()
     serializer_class = serializers.ServiceSerializer
+
+    def get_permissions(self):
+        if self.request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
+            return [permissions.IsAdminUser()]
+        return [permissions.AllowAny()]
+
 
 class StreamingServiceAccountViewSet(ModelViewSet):
 
