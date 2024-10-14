@@ -33,6 +33,7 @@ class StreamingServiceAccount(models.Model):
     price_per_screen = models.DecimalField(max_digits=5, decimal_places=2)
     total_screens = models.PositiveIntegerField()
     available_screens = models.PositiveIntegerField()
+    verfied = models.BooleanField(default=False)
 
 
 # class ScreenSubscription(models.Model):
