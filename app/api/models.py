@@ -36,19 +36,20 @@ class StreamingServiceAccount(models.Model):
     verfied = models.BooleanField(default=False)
 
 
-# class ScreenSubscription(models.Model):
+class ScreenSubscription(models.Model):
 
-#     PAYMENT_STATUS_CHOICES = [
-#         ("P", "Pending"),
-#         ("C", "Completed"),
-#     ]
+    PAYMENT_STATUS_CHOICES = [
+        ("P", "Pending"),
+        ("C", "Completed"),
+    ]
 
-#     streaming_account = models.ForeignKey(StreamingServiceAccount, on_delete=models.CASCADE)
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     screen_number = models.PositiveIntegerField()
-#     is_active = models.BooleanField(default=True)
-#     subscription_date = models.DateTimeField(auto_now_add=True)
-#     payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICES, default="P")
+    streaming_account = models.ForeignKey(StreamingServiceAccount, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    is_active = models.BooleanField(default=True)
+    subscription_date = models.DateTimeField(auto_now_add=True)
+    payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICES, default="P")
 
 
 # class Transaction(models.Model):

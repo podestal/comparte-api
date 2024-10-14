@@ -36,19 +36,18 @@ class StreamingServiceAccountSerializer(serializers.ModelSerializer):
         ]
 
 
-# class ScreenSubscriptionSerializer(serializers.ModelSerializer):
+class ScreenSubscriptionSerializer(serializers.ModelSerializer):
 
-#     class Meta:
-#         model = models.ScreenSubscription
-#         fields = [
-#             "id",
-#             "streaming_account",
-#             "user",
-#             "screen_number",
-#             "is_active",
-#             "subscription_date",
-#             "payment_status",
-#         ]
+    class Meta:
+        model = models.ScreenSubscription
+        fields = [
+            "id",
+            "streaming_account",
+            "user",
+            "is_active",
+            "subscription_date",
+            "payment_status",
+        ]
 
 
 # class TransactionSerializer(serializers.ModelSerializer):

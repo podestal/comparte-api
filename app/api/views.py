@@ -47,10 +47,10 @@ class StreamingServiceAccountViewSet(ModelViewSet):
         return self.queryset.filter(owner=self.request.user)
 
 
-# class ScreenSubscriptionViewSet(ModelViewSet):
+class ScreenSubscriptionViewSet(ModelViewSet):
 
-#     queryset = models.ScreenSubscription.objects.all()
-#     serializer_class = serializers.ScreenSubscriptionSerializer
+    queryset = models.ScreenSubscription.objects.all()
+    serializer_class = serializers.ScreenSubscriptionSerializer
 
 
 # class TransactionViewSet(ModelViewSet):
