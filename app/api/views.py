@@ -37,8 +37,14 @@ class ServiceViewSet(ModelViewSet):
 
 class StreamingServiceAccountViewSet(ModelViewSet):
 
-    queryset = models.StreamingServiceAccount.objects.all()
+    queryset = models.StreamingServiceAccount.objects.select_related("owner", "service")
     serializer_class = serializers.StreamingServiceAccountSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return self.queryset.all()
+        return self.queryset.filter(owner=self.request.user)
 
 
 # class ScreenSubscriptionViewSet(ModelViewSet):
