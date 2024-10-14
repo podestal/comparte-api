@@ -35,10 +35,10 @@ class ServiceViewSet(ModelViewSet):
         return [permissions.AllowAny()]
 
 
-# class StreamingServiceAccountViewSet(ModelViewSet):
+class StreamingServiceAccountViewSet(ModelViewSet):
 
-#     queryset = models.StreamingServiceAccount.objects.all()
-#     serializer_class = serializers.StreamingServiceAccountSerializer
+    queryset = models.StreamingServiceAccount.objects.all()
+    serializer_class = serializers.StreamingServiceAccountSerializer
 
 
 # class ScreenSubscriptionViewSet(ModelViewSet):

@@ -3,8 +3,7 @@ API Models
 """
 
 from django.db import models
-
-# from django.conf import settings
+from django.conf import settings
 
 
 class Service(models.Model):
@@ -25,15 +24,15 @@ class Service(models.Model):
 #         return self.amount
 
 
-# class StreamingServiceAccount(models.Model):
+class StreamingServiceAccount(models.Model):
 
-#     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     service = models.ForeignKey(Service, on_delete=models.CASCADE)
-#     username = models.CharField(max_length=255)
-#     password = models.CharField(max_length=255)
-#     price_per_screen = models.DecimalField(max_digits=5, decimal_places=2)
-#     total_screens = models.PositiveIntegerField()
-#     available_screens = models.PositiveIntegerField()
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    username = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)
+    price_per_screen = models.DecimalField(max_digits=5, decimal_places=2)
+    total_screens = models.PositiveIntegerField()
+    available_screens = models.PositiveIntegerField()
 
 
 # class ScreenSubscription(models.Model):

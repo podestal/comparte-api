@@ -20,20 +20,20 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = ["id", "name"]
 
 
-# class StreamingServiceAccountSerializer(serializers.ModelSerializer):
+class StreamingServiceAccountSerializer(serializers.ModelSerializer):
 
-#     class Meta:
-#         model = models.StreamingServiceAccount
-#         fields = [
-#             "id",
-#             "owner",
-#             "service",
-#             "username",
-#             "password",
-#             "price_per_screen",
-#             "total_screens",
-#             "available_screens",
-#         ]
+    class Meta:
+        model = models.StreamingServiceAccount
+        fields = [
+            "id",
+            "owner",
+            "service",
+            "username",
+            "password",
+            "price_per_screen",
+            "total_screens",
+            "available_screens",
+        ]
 
 
 # class ScreenSubscriptionSerializer(serializers.ModelSerializer):

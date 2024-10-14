@@ -9,7 +9,7 @@ router = routers.DefaultRouter()
 
 # router.register('owners', views.AccountOwnerViewSet, basename='owners')
 router.register("services", views.ServiceViewSet, basename="services")
-# router.register('accounts', views.StreamingServiceAccountViewSet, basename='accounts')
+router.register("accounts", views.StreamingServiceAccountViewSet, basename="accounts")
 # router.register('screens', views.ScreenSubscriptionViewSet, basename='screens')
 # router.register('transactions', views.TransactionViewSet, basename='transactions')
 
