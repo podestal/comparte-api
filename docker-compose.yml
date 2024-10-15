@@ -33,5 +33,14 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
 
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+      - 443:443
+    image: nginx:latest
+    links:
+      - app
+
 volumes:
   dev-db-data:
