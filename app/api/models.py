@@ -39,17 +39,20 @@ class StreamingServiceAccount(models.Model):
 class ScreenSubscription(models.Model):
 
     PAYMENT_STATUS_CHOICES = [
+        ("N", "Not Initiated"),
         ("P", "Pending"),
         ("C", "Completed"),
     ]
 
-    streaming_account = models.ForeignKey(StreamingServiceAccount, on_delete=models.CASCADE)
+    streaming_account = models.ForeignKey(
+        StreamingServiceAccount, on_delete=models.CASCADE, related_name="screen"
+    )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
     )
     is_active = models.BooleanField(default=True)
     subscription_date = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICES, default="P")
+    payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICES, default="N")
 
 
 # class Transaction(models.Model):

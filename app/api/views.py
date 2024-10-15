@@ -1,5 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions
+from django.db.models import Count, Q, Min
 
 # from rest_framework.decorators import action
 # from rest_framework.response import Response
@@ -49,8 +50,36 @@ class StreamingServiceAccountViewSet(ModelViewSet):
 
 class ScreenSubscriptionViewSet(ModelViewSet):
 
-    queryset = models.ScreenSubscription.objects.all()
+    queryset = models.ScreenSubscription.objects.select_related("streaming_account", "user")
     serializer_class = serializers.ScreenSubscriptionSerializer
+
+    def get_queryset(self):
+        accounts_with_available_screens = models.StreamingServiceAccount.objects.annotate(
+            available_screens_count=Count(
+                "screen",
+                filter=Q(screen__is_active=True, screen__user__isnull=True),
+            )
+        )
+
+        min_available_screens = accounts_with_available_screens.aggregate(
+            min_screens=Min("available_screens_count")
+        )["min_screens"]
+
+        accounts_with_least_available_screens = accounts_with_available_screens.filter(
+            available_screens_count=min_available_screens
+        ).values_list("id", flat=True)
+
+        available_screens = (
+            models.ScreenSubscription.objects.filter(
+                is_active=True,
+                user__isnull=True,
+                streaming_account__in=accounts_with_least_available_screens,
+            )
+            .order_by("streaming_account")  # Order to get the first available one
+            .distinct("streaming_account")  # Get one screen per streaming account
+        )
+
+        return available_screens
 
 
 # class TransactionViewSet(ModelViewSet):
