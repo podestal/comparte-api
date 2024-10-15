@@ -8,23 +8,6 @@ from . import models
 from . import serializers
 
 
-# class AccountOwnerViewSet(ModelViewSet):
-
-#     serializer_class = serializers.AccountOwnerSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get_queryset(self):
-#         if self.request.user.is_superuser:
-#             return models.AccountOwner.objects.select_related('user')
-#         return models.AccountOwner.objects.none()
-
-#     @action(detail=False, methods=['get'], url_path='me')
-#     def get_balance_for_authenticated_user(self, request):
-#         owner, created = models.AccountOwner.objects.get_or_create(user=request.user)
-#         serializer = serializers.AccountOwnerSerializer(owner)
-#         return Response(serializer.data)
-
-
 class ServiceViewSet(ModelViewSet):
 
     queryset = models.Service.objects.all()
@@ -53,6 +36,15 @@ class ScreenSubscriptionViewSet(ModelViewSet):
     queryset = models.ScreenSubscription.objects.select_related("streaming_account", "user")
     serializer_class = serializers.ScreenSubscriptionSerializer
 
+    def get_permissions(self):
+
+        if self.request.method in permissions.SAFE_METHODS:
+            return [permissions.AllowAny()]
+
+        if self.request.method == "PATCH":
+            return [permissions.IsAuthenticated()]
+        return [permissions.IsAdminUser()]
+
     def get_queryset(self):
         accounts_with_available_screens = models.StreamingServiceAccount.objects.annotate(
             available_screens_count=Count(
@@ -61,7 +53,11 @@ class ScreenSubscriptionViewSet(ModelViewSet):
             )
         )
 
-        min_available_screens = accounts_with_available_screens.aggregate(
+        accounts_with_non_zero_screens = accounts_with_available_screens.filter(
+            available_screens_count__gt=0
+        )
+
+        min_available_screens = accounts_with_non_zero_screens.aggregate(
             min_screens=Min("available_screens_count")
         )["min_screens"]
 
@@ -81,6 +77,22 @@ class ScreenSubscriptionViewSet(ModelViewSet):
 
         return available_screens
 
+
+# class AccountOwnerViewSet(ModelViewSet):
+
+#     serializer_class = serializers.AccountOwnerSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def get_queryset(self):
+#         if self.request.user.is_superuser:
+#             return models.AccountOwner.objects.select_related('user')
+#         return models.AccountOwner.objects.none()
+
+#     @action(detail=False, methods=['get'], url_path='me')
+#     def get_balance_for_authenticated_user(self, request):
+#         owner, created = models.AccountOwner.objects.get_or_create(user=request.user)
+#         serializer = serializers.AccountOwnerSerializer(owner)
+#         return Response(serializer.data)
 
 # class TransactionViewSet(ModelViewSet):
 
