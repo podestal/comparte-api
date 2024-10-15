@@ -26,7 +26,6 @@ class StreamingServiceAccountSerializer(serializers.ModelSerializer):
         model = models.StreamingServiceAccount
         fields = [
             "id",
-            "owner",
             "service",
             "username",
             "password",
@@ -34,6 +33,10 @@ class StreamingServiceAccountSerializer(serializers.ModelSerializer):
             "total_screens",
             "available_screens",
         ]
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        return models.StreamingServiceAccount.objects.create(owner=user, **validated_data)
 
 
 class ScreenSubscriptionSerializer(serializers.ModelSerializer):

@@ -26,7 +26,7 @@ def create_streaming_service_account(create_user, create_service):
 
 
 @pytest.mark.django_db
-class TestStreamingServiceAccountViewSet:
+class TestStreamingServiceAccount:
 
     # Test list view (GET /accounts/)
     def test_list_streaming_accounts(self, authenticated_user, create_streaming_service_account):
@@ -44,7 +44,6 @@ class TestStreamingServiceAccountViewSet:
     # Test create view (POST /accounts/) as an authenticated user
     def test_create_streaming_account(self, authenticated_user, create_user, create_service):
         account_data = {
-            "owner": create_user.id,
             "service": create_service.id,
             "username": "newuser",
             "password": "password123",

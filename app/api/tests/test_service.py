@@ -11,7 +11,7 @@ def create_service():
 
 
 @pytest.mark.django_db
-class TestServiceViewSet:
+class TestService:
 
     # Test list view (GET /services/)
     def test_list_services(self, api_client, create_service):

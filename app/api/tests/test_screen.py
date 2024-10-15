@@ -38,7 +38,7 @@ def create_screen_subscription(create_user, create_streaming_service_account):
 
 
 @pytest.mark.django_db
-class TestScreenSubscriptionViewSet:
+class TestScreenSubscription:
 
     def test_list_screens_unauthenticated_return_200(self, api_client, create_screen_subscription):
         response = api_client.get("/api/screens/")
