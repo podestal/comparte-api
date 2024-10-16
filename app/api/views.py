@@ -80,7 +80,7 @@ class ScreenSubscriptionViewSet(ModelViewSet):
 
         return available_screens
 
-    @action(detail=False, methods=["GET"], permission_classes=[permissions.IsAuthenticated])
+    @action(detail=False, methods=["GET"])
     def my_screens(self, request):
         user = self.request.user
         if user.is_anonymous:

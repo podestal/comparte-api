@@ -129,6 +129,58 @@ class TestScreenSubscription:
         assert response.status_code == status.HTTP_200_OK
         assert response.data["streaming_account"] == create_screen_subscription.streaming_account.id
 
+    def test_my_screens_unauthenticated_return_empty(self, api_client):
+        response = api_client.get("/api/screens/my_screens/")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == []
+
+    def test_my_screens_authenticated_no_screens_return_empty(self, authenticated_user):
+        response = authenticated_user.get("/api/screens/my_screens/")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == []
+
+    def test_my_screens_authenticated_with_screens_return_data(
+        self, authenticated_user, create_user
+    ):
+        streaming_account = baker.make(StreamingServiceAccount)
+        baker.make(
+            ScreenSubscription,
+            user=create_user,
+            streaming_account=streaming_account,
+            is_active=True,
+        )
+
+        response = authenticated_user.get("/api/screens/my_screens/")
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 1
+        assert response.data[0]["streaming_account"] == streaming_account.id
+
+    def test_my_screens_authenticated_multiple_screens_return_data(
+        self, authenticated_user, create_user
+    ):
+
+        streaming_account_1 = baker.make(StreamingServiceAccount)
+        streaming_account_2 = baker.make(StreamingServiceAccount)
+
+        baker.make(
+            ScreenSubscription,
+            user=create_user,
+            streaming_account=streaming_account_1,
+            is_active=True,
+        )
+        baker.make(
+            ScreenSubscription,
+            user=create_user,
+            streaming_account=streaming_account_2,
+            is_active=True,
+        )
+
+        response = authenticated_user.get("/api/screens/my_screens/")
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 2
+        assert response.data[0]["streaming_account"] == streaming_account_1.id
+        assert response.data[1]["streaming_account"] == streaming_account_2.id
+
     def test_create_screen_subscription_unauthenticated_return_401(
         self, api_client, create_streaming_service_account
     ):
