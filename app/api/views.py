@@ -1,4 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework import permissions
 from django.db.models import Count, Q, Min
 
@@ -46,6 +48,7 @@ class ScreenSubscriptionViewSet(ModelViewSet):
         return [permissions.IsAdminUser()]
 
     def get_queryset(self):
+
         accounts_with_available_screens = models.StreamingServiceAccount.objects.annotate(
             available_screens_count=Count(
                 "screen",
@@ -76,6 +79,27 @@ class ScreenSubscriptionViewSet(ModelViewSet):
         )
 
         return available_screens
+
+    @action(detail=False, methods=["GET"], permission_classes=[permissions.IsAuthenticated])
+    def my_screens(self, request):
+        user = self.request.user
+        if user.is_anonymous:
+            return Response([])
+        screens = models.ScreenSubscription.objects.filter(user=self.request.user)
+        if screens.exists:
+            serializer = serializers.ScreenSubscriptionSerializer(screens, many=True)
+            return Response(serializer.data)
+        return Response([])
+
+
+# class UserScreenSubscriptionViewSet(ModelViewSet):
+
+#     queryset = models.ScreenSubscription.objects.select_related("streaming_account", "user")
+#     serializer_class = serializers.ScreenSubscriptionSerializer
+#     http_method_names = ["get", "patch"]
+
+#     def get_queryset(self):
+#         return self.queryset.filter(user=self.request.user)
 
 
 # class AccountOwnerViewSet(ModelViewSet):
