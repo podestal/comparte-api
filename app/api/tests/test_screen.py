@@ -48,6 +48,48 @@ class TestScreenSubscription:
             response.data[0]["streaming_account"] == create_screen_subscription.streaming_account.id
         )
 
+    def test_get_queryset_no_active_screens_unauthenticated_return_200(self, api_client):
+
+        response = api_client.get("/api/screens/")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 0
+
+    def test_get_queryset_multiple_accounts_unauthenticated_return_200(self, api_client):
+        account_1 = baker.make(StreamingServiceAccount, total_screens=4)
+        account_2 = baker.make(StreamingServiceAccount, total_screens=2)
+
+        baker.make(
+            ScreenSubscription, streaming_account=account_1, is_active=True, user=None, _quantity=3
+        )
+        baker.make(
+            ScreenSubscription, streaming_account=account_2, is_active=True, user=None, _quantity=1
+        )
+
+        response = api_client.get("/api/screens/")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 1  # Only account_2 has the least available screens
+        assert response.data[0]["streaming_account"] == account_2.id
+
+    def test_get_queryset_minimum_screens_unauthenticated_return_200(self, api_client):
+
+        account_1 = baker.make(StreamingServiceAccount, total_screens=4)
+        account_2 = baker.make(StreamingServiceAccount, total_screens=4)
+
+        baker.make(
+            ScreenSubscription, streaming_account=account_1, is_active=True, user=None, _quantity=2
+        )
+        baker.make(
+            ScreenSubscription, streaming_account=account_2, is_active=True, user=None, _quantity=3
+        )
+
+        response = api_client.get("/api/screens/")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 1  # Only account_1 should be returned
+        assert response.data[0]["streaming_account"] == account_1.id
+
     def test_list_screens_authenticated_return_200(
         self, authenticated_user, create_screen_subscription
     ):
